@@ -25,7 +25,14 @@ namespace menu
                         .MoreChoicesText("[grey](Use as setas para navegar)[/]")
                         .AddChoices(new[]
                         {
-                            "Criar tabela no BD"
+                            "Novo cliente",
+                            "Novo pacote de viagens",
+                            "Vendas",
+                            "Cotação de viagens",
+                            "Cotação de moedas",                  
+                            "Inteligência",
+                            "Consulta IA",
+                            
                         }
                 ));
                 switch (opcao)
