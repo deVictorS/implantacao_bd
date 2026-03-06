@@ -1,3 +1,6 @@
+#CI com SonarQube Cloud para análise de código e qualidade
+#Este workflow é configurado para ser acionado em push para a branch 'dev' e em pull requests. Ele configura o ambiente Java, faz o checkout do código, utiliza cache para otimizar a instalação do SonarQube Cloud scanner, e executa a análise de código usando o scanner do SonarQube.
+
 name: SonarQube
 on:
   push:

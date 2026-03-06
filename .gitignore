@@ -17,3 +17,4 @@ publish/
 _ReSharper*/
 *.DotSettings.user
 .env
+keys/

@@ -5,7 +5,7 @@ namespace styles
 {
     public static class BannerMenu
     {
-        public static void ExibirBanner()
+        public static void Banner_Menu()
         {
             AnsiConsole.Write(
                 new FigletText("Valoures Turismo&Câmbio")

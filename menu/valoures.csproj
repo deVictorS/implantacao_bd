@@ -8,9 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.54.0" />
     
     <Compile Include="..\styles\BannerMenu.cs" />
+    <Compile Include="..\cadastro\CadastroCliente.cs" />
   </ItemGroup>
 
 </Project>
