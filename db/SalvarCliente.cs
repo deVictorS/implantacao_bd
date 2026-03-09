@@ -1,26 +1,20 @@
 using MySqlConnector;
 using System;
 using Spectre.Console;
-using DotNetEnv;
+using cadastro;
+using conectar;
 
 namespace salvarcliente
 {
     public static class SalvarCliente
     {
-        private static string CriarConexao()
-        {
-            Env.Load();
-            return $"Server={Env.GetString("DB_SERVER")};Port={Env.GetString("DB_PORT")};Database={Env.GetString("DB_DATABASE")};Uid={Env.GetString("DB_USER")};Pwd={Env.GetString("DB_PASSWORD")};";
-        }
-
-        public static void SalvarNoBanco(cadastro.CadastroCliente.CriarCadastro cliente)
+        public static void SalvarNoBanco(CadastroCliente.CriarCadastro cliente)
         {
             try
             {
-                using var conexao = new MySqlConnection(CriarConexao());
-                conexao.Open();
+                using var conexao = Conectar.ObterConexaoAberta();
 
-                string query = "INSERT INTO clientes (Nome, Cpf, Email, Telefone, DataNascimento, PreferenciaViagem) VALUES (@Nome, @Cpf, @Email, @Telefone, @DataNascimento, @PreferenciaViagem)";
+                string query = "INSERT INTO Clientes (Nome, Cpf, Email, Telefone, DataNascimento, PreferenciaViagem) VALUES (@Nome, @Cpf, @Email, @Telefone, @DataNascimento, @PreferenciaViagem)";
                 using var comando = new MySqlCommand(query, conexao);
 
                 comando.Parameters.AddWithValue("@Nome", cliente.Nome);
@@ -31,15 +25,31 @@ namespace salvarcliente
                 comando.Parameters.AddWithValue("@PreferenciaViagem", cliente.PreferenciaViagem);
 
                 int resultado = comando.ExecuteNonQuery();
+                
                 if (resultado > 0)
+                {
                     AnsiConsole.MarkupLine("[green bold]Cliente salvo com sucesso![/]");
-                else
-                    AnsiConsole.MarkupLine("[red bold]Erro ao salvar o cliente.[/]");
+                    var tabela = new Table();
+                    tabela.AddColumn("[white]Campo[/]");
+                    tabela.AddColumn("[white]Dados Cadastrados[/]");
+                    tabela.AddRow("Nome", cliente.Nome);
+                    tabela.AddRow("CPF", cliente.Cpf);
+                    tabela.AddRow("E-mail", cliente.Email);
+                    tabela.AddRow("Telefone", cliente.Telefone);
+                    tabela.AddRow("Data Nasc.", cliente.DataNascimento);
+                    tabela.AddRow("Preferência", cliente.PreferenciaViagem);            
+                    
+                    AnsiConsole.Write(tabela);
+
+                }
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red bold]Erro: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red bold]Erro na operação:[/] {ex.Message}");
             }
+
+            AnsiConsole.MarkupLine("[grey bold]Pressione qualquer tecla para voltar...[/]");
+            Console.ReadKey(true);
         }
     }
 }

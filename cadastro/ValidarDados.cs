@@ -1,6 +1,8 @@
 using System.Text.RegularExpressions;
 using Spectre.Console;  
 using System.Globalization;
+using System.Collections.Generic;
+using cadastro;
 
 namespace validar
 {
@@ -63,19 +65,32 @@ namespace validar
             return ValidationResult.Success();
         }
 
-            public static ValidationResult ValidarPreferenciaViagem(string PreferenciaViagem)
-            {
-                if (string.IsNullOrWhiteSpace(PreferenciaViagem) || PreferenciaViagem.Length < 3)
-                    return ValidationResult.Error("[red]A preferência de viagem é obrigatória.[/]");
-                return ValidationResult.Success();
-            }
+        public static ValidationResult ValidarPreferenciaViagem(string PreferenciaViagem)
+        {
+            if (string.IsNullOrWhiteSpace(PreferenciaViagem) || PreferenciaViagem.Length < 3)
+                return ValidationResult.Error("[red]A preferência de viagem é obrigatória.[/]");
+            return ValidationResult.Success();
+        }
 
-            public static ValidationResult ValidarNivelFidelidade(string NivelFidelidade)
-            {
-                if (string.IsNullOrWhiteSpace(NivelFidelidade))
-                    return ValidationResult.Error("[red]O nível de fidelidade é obrigatório.[/]");
-                return ValidationResult.Success();
-            }
+        public static ValidationResult ValidarNivelFidelidade(string NivelFidelidade)
+        {
+            if (string.IsNullOrWhiteSpace(NivelFidelidade))
+                return ValidationResult.Error("[red]O nível de fidelidade é obrigatório.[/]");
+            return ValidationResult.Success();
+        }
 
+        public static List<string> VerificarCamposVazios(CadastroCliente.CriarCadastro cliente)
+        {
+            var faltantes = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(cliente.Nome)) faltantes.Add("Nome");
+            if (string.IsNullOrWhiteSpace(cliente.Cpf)) faltantes.Add("CPF");
+            if (string.IsNullOrWhiteSpace(cliente.Email)) faltantes.Add("Email");
+            if (string.IsNullOrWhiteSpace(cliente.Telefone)) faltantes.Add("Telefone");
+            if (string.IsNullOrWhiteSpace(cliente.DataNascimento)) faltantes.Add("Data de Nascimento");
+            if (string.IsNullOrWhiteSpace(cliente.PreferenciaViagem)) faltantes.Add("Preferência de Viagem");
+
+            return faltantes;
+        }
     }
 }

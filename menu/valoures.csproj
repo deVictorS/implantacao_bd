@@ -19,6 +19,7 @@
     <Compile Include="..\cadastro\CadastroCliente.cs" />
     <Compile Include="..\cadastro\ValidarDados.cs" />
     <Compile Include="..\db\SalvarCliente.cs" />
+    <Compile Include="..\db\ConectarBanco.cs" />
   </ItemGroup>
 
 </Project>

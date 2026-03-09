@@ -26,10 +26,13 @@ namespace menu
                     new SelectionPrompt<string>()
                         .Title("[grey bold]Selecione uma opção:[/]")
                         .PageSize(10)
-                        .MoreChoicesText("[grey](Use as setas para navegar)[/]")
+                        .MoreChoicesText("[grey bold](Use as setas para navegar)[/]")
                         .AddChoices(new[]
                         {
                             "[bold]Novo cliente[/]",
+                            "[bold]Editar cliente[/]",
+                            "[bold]Excluir cliente[/]",
+                            "[bold]Pesquisar cliente[/]",
                             "[bold]Novo pacote de viagens[/]",
                             "[bold]Vendas[/]",
                             "[bold]Cotação de viagens[/]",

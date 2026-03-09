@@ -78,19 +78,12 @@ namespace cadastro
                     }
                     else if (opcao.Contains("Salvar dados"))
                     {
-                        var CamposFaltando = new List<string>();
+                        var camposFaltando = ValidarDados.VerificarCamposVazios(cadastro);
 
-                        if (string.IsNullOrWhiteSpace(cadastro.Nome) || cadastro.Nome == "[Caminho Vazio]") CamposFaltando.Add("Nome");
-                        if (string.IsNullOrWhiteSpace(cadastro.Cpf) || cadastro.Cpf == "[Caminho Vazio]") CamposFaltando.Add("CPF");
-                        if (string.IsNullOrWhiteSpace(cadastro.Email) || cadastro.Email == "[Caminho Vazio]") CamposFaltando.Add("Email");
-                        if (string.IsNullOrWhiteSpace(cadastro.Telefone) || cadastro.Telefone == "[Caminho Vazio]") CamposFaltando.Add("Telefone");
-                        if (string.IsNullOrWhiteSpace(cadastro.DataNascimento) || cadastro.DataNascimento == "[Caminho Vazio]") CamposFaltando.Add("Data de Nascimento");
-                        if (string.IsNullOrWhiteSpace(cadastro.PreferenciaViagem) || cadastro.PreferenciaViagem == "[Caminho Vazio]") CamposFaltando.Add("Preferência de Viagem");
-
-                        if (CamposFaltando.Count > 0)
+                        if (camposFaltando.Count > 0)
                         {
                             AnsiConsole.MarkupLine("[red bold]Erro: Os seguintes campos são obrigatórios:[/]");
-                            foreach (var campo in CamposFaltando)
+                            foreach (var campo in camposFaltando)
                             {
                                 AnsiConsole.MarkupLine($"[red]  - {campo}[/]");
                             }
@@ -99,20 +92,17 @@ namespace cadastro
                         }
                         else
                         {
-                            AnsiConsole.Status()
-                                .Start("Conectando ao RDS AWS...", ctx =>
-                                {
-                                    try
-                                    {
-                                        salvarcliente.SalvarCliente.SalvarNoBanco(cadastro);
-                                        finalizado = true;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        AnsiConsole.MarkupLine($"[bold red]Erro ao salvar cliente: {ex.Message}[/]");
-                                        Console.ReadKey(true);
-                                    }
-                                });
+                            try
+                            {
+                                salvarcliente.SalvarCliente.SalvarNoBanco(cadastro);
+                                finalizado = true;
+                            }            
+                            catch (Exception ex)
+                            {
+                                AnsiConsole.MarkupLine($"[bold red]Erro crítico: {ex.Message}[/]");
+                                AnsiConsole.MarkupLine("\n[grey]Pressione qualquer tecla para voltar...[/]");
+                                Console.ReadKey(true);
+                            }
                         }
                     }
                     else if (opcao.Contains("Sair"))
