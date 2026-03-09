@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using styles;
 using cadastro;
 
 namespace menu
@@ -8,38 +7,51 @@ namespace menu
     {
         static async Task Main(string[] args)
         {
-            Console.Clear();
-
-            Console.Title = "Software de Gestão";
-
-            BannerMenu.Banner_Menu();
-
             var encerrar = false;
 
             while (!encerrar)
             {
+                Console.Clear();
+
+                Console.Title = "Software de Gestão";
+
+                AnsiConsole.Write(
+                    new FigletText("Valoures Turismo&Câmbio")
+                    .Centered()
+                    .Color(Color.Green));
+
+                AnsiConsole.Write(new Rule("[green bold]Menu Principal[/]").Centered());
+                    
                 var opcao = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title("[grey]Selecione uma opção:[/]")
+                        .Title("[grey bold]Selecione uma opção:[/]")
                         .PageSize(10)
                         .MoreChoicesText("[grey](Use as setas para navegar)[/]")
                         .AddChoices(new[]
                         {
-                            "Novo cliente",
-                            "Novo pacote de viagens",
-                            "Vendas",
-                            "Cotação de viagens",
-                            "Cotação de moedas",                  
-                            "Inteligência",
-                            "Consulta IA",
+                            "[bold]Novo cliente[/]",
+                            "[bold]Novo pacote de viagens[/]",
+                            "[bold]Vendas[/]",
+                            "[bold]Cotação de viagens[/]",
+                            "[bold]Cotação de moedas[/]",                  
+                            "[bold]Inteligência[/]",
+                            "[bold]Consulta IA[/]",
+                            "[bold red]Finalizar programa[/]",
                             
                         }
                 ));
                 switch (opcao)
                 {
-                    case "Criar tabela no BD":
-                        CadastroCliente.Criar_Cadastro();
+                    case "[bold]Novo cliente[/]":
+                        CadastroCliente.CriarCadastro.Executar();
                         break;
+                    
+                    case "[bold red]Finalizar programa[/]":
+                        Console.Clear();
+                        AnsiConsole.MarkupLine("[red bold]Encerrando o programa...[/]");
+                        encerrar = true;
+                        break;
+
                 }
             }
             

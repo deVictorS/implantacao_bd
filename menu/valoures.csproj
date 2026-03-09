@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -15,8 +16,9 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="Spectre.Console" Version="0.54.0" />
     
-    <Compile Include="..\styles\BannerMenu.cs" />
     <Compile Include="..\cadastro\CadastroCliente.cs" />
+    <Compile Include="..\cadastro\ValidarDados.cs" />
+    <Compile Include="..\db\SalvarCliente.cs" />
   </ItemGroup>
 
 </Project>
