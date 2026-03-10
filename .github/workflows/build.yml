@@ -1,6 +1,3 @@
-#CI com SonarQube Cloud para análise de código e qualidade
-#Este workflow é configurado para ser acionado em push para a branch 'dev' e em pull requests. Ele configura o ambiente Java, faz o checkout do código, utiliza cache para otimizar a instalação do SonarQube Cloud scanner, e executa a análise de código usando o scanner do SonarQube.
-
 name: SonarQube
 on:
   push:
@@ -21,10 +18,10 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 17
-          distribution: 'zulu' # Alternative distribution options are available.
+          distribution: 'zulu'
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0 
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
@@ -44,11 +41,20 @@ jobs:
         run: |
           New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
+      
       - name: Build and analyze
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"deVictorS_implantacao_bd" /o:"devictors" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          # Usamos $env:SONAR_TOKEN para segurança e ` para quebrar linhas no PowerShell
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin `
+            /k:"deVictorS_implantacao_bd" `
+            /o:"devictors" `
+            /d:sonar.token="$env:SONAR_TOKEN" `
+            /d:sonar.host.url="https://sonarcloud.io"
+
           dotnet build ./menu/valoures.csproj
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"

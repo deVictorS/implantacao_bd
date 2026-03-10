@@ -8,12 +8,19 @@ namespace validar
 {
     public static class ValidarDados
     {
+        static ValidarDados()
+        {
+            AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
+        }
+
         public static ValidationResult ValidarNome(string Nome)
         {
             if (string.IsNullOrWhiteSpace(Nome) || Nome.Length < 3)
                 return ValidationResult.Error("[red]O nome deve conter pelo menos 3 caracteres.[/]");
 
-            return Regex.IsMatch(Nome, @"^[a-zA-ZÀ-ÿ\s]+$")
+            var isLetter = Regex.IsMatch(Nome, @"^[a-zA-ZÀ-ÿ\s]+$", RegexOptions.NonBacktracking);
+
+            return isLetter
                 ? ValidationResult.Success()
                 : ValidationResult.Error("[red]O nome deve conter apenas letras e espaços.[/]");
         }
@@ -23,8 +30,9 @@ namespace validar
             if (string.IsNullOrWhiteSpace(Cpf))
                 return ValidationResult.Error("[red]O CPF é obrigatório.[/]");
 
-            var regex = new Regex(@"^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$");
-            return regex.IsMatch(Cpf) 
+            var cpfRegex = new Regex(@"^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+            
+            return cpfRegex.IsMatch(Cpf) 
                 ? ValidationResult.Success() 
                 : ValidationResult.Error("[red]Formato de CPF inválido! Use: 000.000.000-00[/]");
         }
@@ -34,8 +42,9 @@ namespace validar
             if (string.IsNullOrWhiteSpace(Email))
                 return ValidationResult.Error("[red]O email é obrigatório.[/]");
 
-            var regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-            return regex.IsMatch(Email) 
+            var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.NonBacktracking);
+
+            return emailRegex.IsMatch(Email) 
                 ? ValidationResult.Success() 
                 : ValidationResult.Error("[red]Formato de email inválido! Use: exemplo@dominio.com[/]");
         }
@@ -45,8 +54,9 @@ namespace validar
             if (string.IsNullOrWhiteSpace(Telefone))
                 return ValidationResult.Error("[red]O telefone é obrigatório.[/]");
 
-            var regex = new Regex(@"^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$");
-            return regex.IsMatch(Telefone) 
+            var telRegex = new Regex(@"^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$", RegexOptions.NonBacktracking);
+
+            return telRegex.IsMatch(Telefone) 
                 ? ValidationResult.Success() 
                 : ValidationResult.Error("[red]Formato de telefone inválido! Use: (00) 00000-0000[/]");
         }
