@@ -82,10 +82,15 @@ namespace validar
             return ValidationResult.Success();
         }
 
-        public static ValidationResult ValidarNivelFidelidade(string NivelFidelidade)
+                public static ValidationResult ValidarNivelFidelidade(string nivelFidelidade)
         {
-            if (string.IsNullOrWhiteSpace(NivelFidelidade))
+            if (string.IsNullOrWhiteSpace(nivelFidelidade))
                 return ValidationResult.Error("[red]O nível de fidelidade é obrigatório.[/]");
+            
+            var niveisValidos = new List<string> { "Bronze", "Prata", "Ouro", "Platina" };
+            if (!niveisValidos.Contains(nivelFidelidade))
+                return ValidationResult.Error("[red]Nível inválido. Escolha entre Bronze, Prata, Ouro ou Platina.[/]");
+
             return ValidationResult.Success();
         }
 
@@ -99,6 +104,7 @@ namespace validar
             if (string.IsNullOrWhiteSpace(cliente.Telefone)) faltantes.Add("Telefone");
             if (string.IsNullOrWhiteSpace(cliente.DataNascimento)) faltantes.Add("Data de Nascimento");
             if (string.IsNullOrWhiteSpace(cliente.PreferenciaViagem)) faltantes.Add("Preferência de Viagem");
+            if (string.IsNullOrWhiteSpace(cliente.NivelFidelidade)) faltantes.Add("Nível de Fidelidade");
 
             return faltantes;
         }

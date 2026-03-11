@@ -27,7 +27,8 @@ namespace cadastro
                     Email = "",
                     Telefone = "",
                     DataNascimento = "",
-                    PreferenciaViagem = ""
+                    PreferenciaViagem = "",
+                    NivelFidelidade = "Bronze"
                 };
 
                 bool finalizado = false;
@@ -39,7 +40,7 @@ namespace cadastro
 
                     var opcao = AnsiConsole.Prompt(
                         new SelectionPrompt<string>()
-                            .Title("Selecione um campo para [blue]preencher/editar[/] ou escolha [green]Salvar[/]:")
+                            .Title("[bold]Selecione um campo para [blue]preencher/editar[/]:")
                             .PageSize(10)
                             .AddChoices(new[] {
                                 $"[bold]Nome:[/] {Markup.Escape(cadastro.Nome)}",
@@ -48,6 +49,7 @@ namespace cadastro
                                 $"[bold]Telefone:[/] {Markup.Escape(cadastro.Telefone)}",
                                 $"[bold]Data Nasc.:[/] {Markup.Escape(cadastro.DataNascimento)}",
                                 $"[bold]Preferência:[/] {Markup.Escape(cadastro.PreferenciaViagem)}",
+                                $"[bold]Nível de Fidelidade:[/] {Markup.Escape(cadastro.NivelFidelidade)}",
                                 "[bold green]Salvar dados[/]",
                                 "[bold red]Sair[/]"
                             }));
@@ -76,6 +78,21 @@ namespace cadastro
                     {
                         cadastro.PreferenciaViagem = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite a preferência de viagem:[/]").Validate(ValidarDados.ValidarPreferenciaViagem));
                     }
+
+                    else if (opcao.Contains("Preferência:"))
+                    {
+                        cadastro.PreferenciaViagem = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite a preferência de viagem:[/]").Validate(ValidarDados.ValidarPreferenciaViagem));
+                    }
+                    else if (opcao.Contains("Nível de Fidelidade:"))
+                    {
+                        cadastro.NivelFidelidade = AnsiConsole.Prompt(
+                            new SelectionPrompt<string>()
+                                .Title("[bold]Selecione o nível de fidelidade do cliente:[/]")
+                                .PageSize(5)
+                                .AddChoices(new[] { "Bronze", "Prata", "Ouro", "Platina" }));
+                                
+                        AnsiConsole.MarkupLine($"[green]Nível definido como:[/] {cadastro.NivelFidelidade}");
+                    }
                     else if (opcao.Contains("Salvar dados"))
                     {
                         var camposFaltando = ValidarDados.VerificarCamposVazios(cadastro);
@@ -87,7 +104,7 @@ namespace cadastro
                             {
                                 AnsiConsole.MarkupLine($"[red]  - {campo}[/]");
                             }
-                            AnsiConsole.MarkupLine("\n[grey]Pressione qualquer tecla para corrigir...[/]");
+                            AnsiConsole.MarkupLine("\n[grey bold]Pressione qualquer tecla para corrigir...[/]");
                             Console.ReadKey(true);
                         }
                         else

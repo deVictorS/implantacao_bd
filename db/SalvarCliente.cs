@@ -3,6 +3,7 @@ using System;
 using Spectre.Console;
 using cadastro;
 using conectar;
+using tabelacliente;
 
 namespace salvarcliente
 {
@@ -28,18 +29,8 @@ namespace salvarcliente
                 
                 if (resultado > 0)
                 {
-                    AnsiConsole.MarkupLine("[green bold]Cliente salvo com sucesso![/]");
-                    var tabela = new Table();
-                    tabela.AddColumn("[white]Campo[/]");
-                    tabela.AddColumn("[white]Dados Cadastrados[/]");
-                    tabela.AddRow("Nome", cliente.Nome);
-                    tabela.AddRow("CPF", cliente.Cpf);
-                    tabela.AddRow("E-mail", cliente.Email);
-                    tabela.AddRow("Telefone", cliente.Telefone);
-                    tabela.AddRow("Data Nasc.", cliente.DataNascimento);
-                    tabela.AddRow("Preferência", cliente.PreferenciaViagem);            
-                    
-                    AnsiConsole.Write(tabela);
+                    var tabelaCliente = new TabelaCliente();
+                    tabelaCliente.ExibirCliente(cliente);
 
                 }
             }

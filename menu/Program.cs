@@ -1,5 +1,6 @@
 ﻿using Spectre.Console;
 using cadastro;
+using pesquisarcliente;
 
 namespace menu
 {
@@ -47,6 +48,10 @@ namespace menu
                 {
                     case "[bold]Novo cliente[/]":
                         CadastroCliente.CriarCadastro.Executar();
+                        break;
+                    
+                    case "[bold]Pesquisar cliente[/]":
+                        PesquisarCliente.Executar();
                         break;
                     
                     case "[bold red]Finalizar programa[/]":

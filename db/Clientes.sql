@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS valouresdb;
+USE valouresdb;
+CREATE TABLE IF NOT EXISTS Clientes (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(150) NOT NULL,
+    Cpf VARCHAR(14) NOT NULL UNIQUE,
+    Email VARCHAR(100) NOT NULL,
+    Telefone VARCHAR(20),
+    DataNascimento DATE,
+    PreferenciaViagem VARCHAR(100),
+    NivelFidelidade VARCHAR(20) DEFAULT 'Bronze',
+    DataCadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

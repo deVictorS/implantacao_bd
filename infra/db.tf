@@ -34,7 +34,7 @@ resource "aws_db_instance" "valoures_db" {
   publicly_accessible  = true
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   storage_encrypted = true
-  backup_retention_period = 7
+  backup_retention_period = 1
 }
 
 variable "db_username" {

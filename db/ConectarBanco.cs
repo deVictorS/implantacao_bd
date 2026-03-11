@@ -10,7 +10,7 @@ namespace conectar
         public static MySqlConnection ObterConexaoAberta()
         {
             Env.Load();
-            string stringConexao = $"Server={Env.GetString("DB_SERVER")};Port={Env.GetString("DB_PORT")};Database={Env.GetString("DB_DATABASE")};Uid={Env.GetString("DB_USER")};Pwd={Env.GetString("DB_PASSWORD")};";
+            string stringConexao = $"Server={Env.GetString("DB_SERVER")};Port={Env.GetString("DB_PORT")};Database={Env.GetString("DB_DATABASE")};Uid={Env.GetString("DB_USER")};Pwd={Env.GetString("DB_PASSWORD")}; Convert Zero Datetime=True;";
             
             var conexao = new MySqlConnection(stringConexao);
             
