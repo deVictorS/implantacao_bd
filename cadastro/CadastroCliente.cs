@@ -10,119 +10,116 @@ namespace cadastro
     {
         public class CriarCadastro
         {
-            public string Nome { get; set; }
-            public string Cpf { get; set; }
-            public string Email { get; set; }
-            public string Telefone { get; set; }
-            public string DataNascimento { get; set; }
-            public string PreferenciaViagem { get; set; }
-            public string NivelFidelidade { get; set; }
+            public required string Nome { get; set; } = string.Empty;
+            public required string Cpf { get; set; } = string.Empty;
+            public required string Email { get; set; } = string.Empty;
+            public required string Telefone { get; set; } = string.Empty;
+            public required string DataNascimento { get; set; } = string.Empty;
+            public required string PreferenciaViagem { get; set; } = string.Empty;
+            public required string NivelFidelidade { get; set; } = "Bronze";
 
             public static void Executar()
             {
-                CriarCadastro cadastro = new CriarCadastro
-                {
-                    Nome = "",
-                    Cpf = "",
-                    Email = "",
-                    Telefone = "",
-                    DataNascimento = "",
-                    PreferenciaViagem = "",
-                    NivelFidelidade = "Bronze"
+                var cadastro = new CriarCadastro { 
+                    Nome = "", Cpf = "", Email = "", Telefone = "", 
+                    DataNascimento = "", PreferenciaViagem = "", NivelFidelidade = "Bronze" 
                 };
 
-                bool finalizado = false;
-
-                while (!finalizado)
+                while (true)
                 {
                     AnsiConsole.Clear();
                     AnsiConsole.Write(new Rule("[green bold]Cadastro de Cliente[/]").Centered());
 
-                    var opcao = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("[bold]Selecione um campo para [blue]preencher/editar[/]:")
-                            .PageSize(10)
-                            .AddChoices(new[] {
-                                $"[bold]Nome:[/] {Markup.Escape(cadastro.Nome)}",
-                                $"[bold]CPF:[/] {Markup.Escape(cadastro.Cpf)}",
-                                $"[bold]Email:[/] {Markup.Escape(cadastro.Email)}",
-                                $"[bold]Telefone:[/] {Markup.Escape(cadastro.Telefone)}",
-                                $"[bold]Data Nasc.:[/] {Markup.Escape(cadastro.DataNascimento)}",
-                                $"[bold]Preferência:[/] {Markup.Escape(cadastro.PreferenciaViagem)}",
-                                $"[bold]Nível de Fidelidade:[/] {Markup.Escape(cadastro.NivelFidelidade)}",
-                                "[bold green]Salvar dados[/]",
-                                "[bold red]Sair[/]"
-                            }));
+                    var opcao = MenuPrincipal(cadastro);
 
-                    if (opcao.Contains("Nome:"))
+                    if (opcao.Contains("Sair")) break;
+                    if (opcao.Contains("Salvar dados"))
                     {
-                        cadastro.Nome = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite o nome completo do cliente:[/]").Validate(ValidarDados.ValidarNome));
+                        if (TentarSalvar(cadastro)) break;
+                        continue;
                     }
-                    else if (opcao.Contains("CPF:"))
-                    {
-                        cadastro.Cpf = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite o CPF do cliente:[/]").Validate(ValidarDados.ValidarCpf));
-                    }
-                    else if (opcao.Contains("Email:"))
-                    {
-                        cadastro.Email = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite o email do cliente:[/]").Validate(ValidarDados.ValidarEmail));
-                    }
-                    else if (opcao.Contains("Telefone:"))
-                    {
-                        cadastro.Telefone = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite o telefone do cliente:[/]").Validate(ValidarDados.ValidarTelefone));
-                    }
-                    else if (opcao.Contains("Data Nasc.:"))
-                    {
-                        cadastro.DataNascimento = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Data de nascimento:[/]").Validate(ValidarDados.ValidarDataNascimento));
-                    }
-                    else if (opcao.Contains("Preferência:"))
-                    {
-                        cadastro.PreferenciaViagem = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite a preferência de viagem:[/]").Validate(ValidarDados.ValidarPreferenciaViagem));
-                    }
-                    else if (opcao.Contains("Nível de Fidelidade:"))
-                    {
-                        cadastro.NivelFidelidade = AnsiConsole.Prompt(
-                            new SelectionPrompt<string>()
-                                .Title("[bold]Selecione o nível de fidelidade do cliente:[/]")
-                                .PageSize(5)
-                                .AddChoices(new[] { "Bronze", "Prata", "Ouro", "Platina" }));
-                                
-                        AnsiConsole.MarkupLine($"[green]Nível definido como:[/] {cadastro.NivelFidelidade}");
-                    }
-                    else if (opcao.Contains("Salvar dados"))
-                    {
-                        var camposFaltando = ValidarDados.VerificarCamposVazios(cadastro);
 
-                        if (camposFaltando.Count > 0)
-                        {
-                            AnsiConsole.MarkupLine("[red bold]Erro: Os seguintes campos são obrigatórios:[/]");
-                            foreach (var campo in camposFaltando)
-                            {
-                                AnsiConsole.MarkupLine($"[red]  - {campo}[/]");
-                            }
-                            AnsiConsole.MarkupLine("\n[grey bold]Pressione qualquer tecla para corrigir...[/]");
-                            Console.ReadKey(true);
-                        }
-                        else
-                        {
-                            try
-                            {
-                                salvarcliente.SalvarCliente.SalvarNoBanco(cadastro);
-                                finalizado = true;
-                            }            
-                            catch (Exception ex)
-                            {
-                                AnsiConsole.MarkupLine($"[bold red]Erro crítico: {ex.Message}[/]");
-                                AnsiConsole.MarkupLine("\n[grey]Pressione qualquer tecla para voltar...[/]");
-                                Console.ReadKey(true);
-                            }
-                        }
-                    }
-                    else if (opcao.Contains("Sair"))
-                    {
-                        AnsiConsole.Clear();
-                        finalizado = true;
-                    }
+                    ProcessarEntrada(opcao, cadastro);
                 }
+            }
+
+            private static string MenuPrincipal(CriarCadastro c)
+            {
+                return AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[bold]Selecione um campo para preencher/editar[/]:")
+                        .PageSize(10)
+                        .AddChoices(new[] {
+                            $"[bold]Nome:[/] {Markup.Escape(c.Nome)}",
+                            $"[bold]CPF:[/] {Markup.Escape(c.Cpf)}",
+                            $"[bold]Email:[/] {Markup.Escape(c.Email)}",
+                            $"[bold]Telefone:[/] {Markup.Escape(c.Telefone)}",
+                            $"[bold]Data Nasc.:[/] {Markup.Escape(c.DataNascimento)}",
+                            $"[bold]Preferência:[/] {Markup.Escape(c.PreferenciaViagem)}",
+                            $"[bold]Nível de Fidelidade:[/] {Markup.Escape(c.NivelFidelidade)}",
+                            "[bold green]Salvar dados[/]",
+                            "[bold red]Sair[/]"
+                        }));
+            }
+
+            private static void ProcessarEntrada(string opcao, CriarCadastro c)
+            {                string selecao = Markup.Remove(opcao);
+
+                if (selecao.StartsWith("Nome:")) 
+                    c.Nome = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Nome completo:[/]").Validate(ValidarDados.ValidarNome));
+                
+                else if (selecao.StartsWith("CPF:")) 
+                    c.Cpf = AnsiConsole.Prompt(new TextPrompt<string>("[bold]CPF:[/]").Validate(ValidarDados.ValidarCpf));
+                
+                else if (selecao.StartsWith("Email:")) 
+                    c.Email = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Email:[/]").Validate(ValidarDados.ValidarEmail));
+                
+                else if (selecao.StartsWith("Telefone:")) 
+                    c.Telefone = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Telefone:[/]").Validate(ValidarDados.ValidarTelefone));
+                
+                else if (selecao.StartsWith("Data Nasc.:")) 
+                    c.DataNascimento = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Data nascimento:[/]").Validate(ValidarDados.ValidarDataNascimento));
+                
+                else if (selecao.StartsWith("Preferência:")) 
+                    c.PreferenciaViagem = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Preferência:[/]").Validate(ValidarDados.ValidarPreferenciaViagem));
+                
+                else if (selecao.StartsWith("Nível de Fidelidade:")) 
+                    c.NivelFidelidade = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                        .Title("[bold]Selecione o nível:[/]")
+                        .AddChoices(new[] { "Bronze", "Prata", "Ouro", "Platina" }));
+            }
+
+            private static bool TentarSalvar(CriarCadastro c)
+            {
+                var camposFaltando = ValidarDados.VerificarCamposVazios(c);
+
+                if (camposFaltando.Count > 0)
+                {
+                    ExibirErroCampos(camposFaltando);
+                    return false;
+                }
+
+                try
+                {
+                    salvarcliente.SalvarCliente.SalvarNoBanco(c);
+                    AnsiConsole.MarkupLine("[bold green]Cliente salvo com sucesso no RDS![/]");
+                    System.Threading.Thread.Sleep(1500);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.MarkupLine($"[bold red]Erro ao salvar: {Markup.Escape(ex.Message)}[/]");
+                    Console.ReadKey(true);
+                    return false;
+                }
+            }
+
+            private static void ExibirErroCampos(List<string> campos)
+            {
+                AnsiConsole.MarkupLine("[red bold]Campos obrigatórios faltando:[/]");
+                foreach (var campo in campos) AnsiConsole.MarkupLine($" [red]- {campo}[/]");
+                AnsiConsole.MarkupLine("\n[grey bold]Pressione qualquer tecla para voltar...[/]");
+                Console.ReadKey(true);
             }
         }
     }
