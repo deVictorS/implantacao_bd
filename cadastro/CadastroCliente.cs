@@ -78,11 +78,6 @@ namespace cadastro
                     {
                         cadastro.PreferenciaViagem = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite a preferência de viagem:[/]").Validate(ValidarDados.ValidarPreferenciaViagem));
                     }
-
-                    else if (opcao.Contains("Preferência:"))
-                    {
-                        cadastro.PreferenciaViagem = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Digite a preferência de viagem:[/]").Validate(ValidarDados.ValidarPreferenciaViagem));
-                    }
                     else if (opcao.Contains("Nível de Fidelidade:"))
                     {
                         cadastro.NivelFidelidade = AnsiConsole.Prompt(

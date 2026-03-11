@@ -23,7 +23,7 @@ namespace menu
 
                 AnsiConsole.Write(new Rule("[green bold]Menu Principal[/]").Centered());
                     
-                var opcao = AnsiConsole.Prompt(
+                var opcao = await AnsiConsole.PromptAsync(
                     new SelectionPrompt<string>()
                         .Title("[grey bold]Selecione uma opção:[/]")
                         .PageSize(10)
