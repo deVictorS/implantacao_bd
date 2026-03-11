@@ -10,6 +10,10 @@ namespace cadastro
     {
         public class CriarCadastro
         {
+            private static readonly string[] NiveisFidelidade = { "Bronze", "Prata", "Ouro", "Platina", "Diamante" };
+            private const string OpcaoSalvar = "[bold green]Salvar dados[/]";
+            private const string OpcaoSair = "[bold red]Sair[/]";
+
             public required string Nome { get; set; } = string.Empty;
             public required string Cpf { get; set; } = string.Empty;
             public required string Email { get; set; } = string.Empty;
@@ -83,10 +87,11 @@ namespace cadastro
                 else if (selecao.StartsWith("Preferência:")) 
                     c.PreferenciaViagem = AnsiConsole.Prompt(new TextPrompt<string>("[bold]Preferência:[/]").Validate(ValidarDados.ValidarPreferenciaViagem));
                 
-                else if (selecao.StartsWith("Nível de Fidelidade:")) 
+                else if (selecao.StartsWith("Nível de Fidelidade:")){ 
                     c.NivelFidelidade = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                        .Title("[bold]Selecione o nível:[/]")
-                        .AddChoices(new[] { "Bronze", "Prata", "Ouro", "Platina" }));
+                        .Title("[bold]Selecione o nível de fidelidade:[/]")
+                        .AddChoices(NiveisFidelidade));
+                }
             }
 
             private static bool TentarSalvar(CriarCadastro c)
